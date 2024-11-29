@@ -97,10 +97,10 @@ class HrTimesheetSheet(models.Model):
                 user_id=sheet.user_id.id,
             )
 
-        super().action_timesheet_draft()
+        return super().action_timesheet_draft()
 
     def action_timesheet_confirm(self):
-        super().action_timesheet_confirm()
+        res = super().action_timesheet_confirm()
 
         # NOTE: activity_reschedule is used instead of activity_feedback
         # to accomodate non-assigned-user completion
@@ -124,9 +124,10 @@ class HrTimesheetSheet(models.Model):
                     date_deadline=deadline,
                     user_id=reviewer.id,
                 )
+        return res
 
     def action_timesheet_done(self):
-        super().action_timesheet_done()
+        res = super().action_timesheet_done()
 
         # NOTE: activity_reschedule is used instead of activity_feedback
         # to accomodate non-assigned-user completion
@@ -140,6 +141,7 @@ class HrTimesheetSheet(models.Model):
                 # NOTE: Only assigned user can update the activity
                 activity = activity.sudo()
             activity.action_feedback()
+        return res
 
     def action_timesheet_refuse(self):
         for sheet in self:
@@ -149,7 +151,7 @@ class HrTimesheetSheet(models.Model):
                 user_id=sheet.user_id.id,
             )
 
-        super().action_timesheet_refuse()
+        res = super().action_timesheet_refuse()
 
         # NOTE: activity_reschedule is used instead of activity_feedback
         # to accomodate non-assigned-user completion
@@ -163,6 +165,7 @@ class HrTimesheetSheet(models.Model):
                 # NOTE: Only assigned user can update the activity
                 activity = activity.sudo()
             activity.action_feedback()
+        return res
 
     def _activity_sheet_submission_deadline(self):
         """Hook for extensions"""
